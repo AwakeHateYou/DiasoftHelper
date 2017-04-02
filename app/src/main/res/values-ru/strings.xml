@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Diasoft Helper</string>
-    <string name="title_activity_login">Идентификация</string>
+    <string name="title_activity_login">Diasoft Helper</string>
 
-    <!-- Strings related to login -->
+    <!-- Логин -->
     <string name="prompt_email">Логин</string>
     <string name="prompt_password">Пароль</string>
-    <string name="action_sign_in">Подтвердить</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
+    <string name="action_sign_in">Войти</string>
+    <string name="action_sign_in_short">Войти</string>
+    <string name="error_invalid_email">Логин невалиден</string>
+    <string name="error_invalid_password">Пароль слишком короткий</string>
+    <string name="error_incorrect_password">Неверный пароль</string>
+    <string name="error_field_required">Обязательное поле</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <!--Главное окно-->
+    <string name="welcome">Добро пожаловать</string>
+
+    <!--Drawer-->
+    <string name="drawer_item_settings">Настройки</string>
+    <string name="drawer_item_home">Домой</string>
+    <string name="drawer_item_send_feedback">Отправить предложение</string>
 </resources>
