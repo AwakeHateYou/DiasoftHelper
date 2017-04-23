@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * TODO: remove after connecting to a real authentication system.
      */
     private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "eterentev:123", "bar@example.com:world"
+            "eterentev:123", "bar@example.com:world, 1:"
     };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -350,6 +350,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 startMainActivity(mView);
                 finish();
             } else {
+                startMainActivity(mView);
+                finish();
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }

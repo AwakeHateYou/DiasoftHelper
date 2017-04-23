@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.mikepenz.materialdrawer.Drawer;
@@ -14,17 +15,31 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import org.json.JSONException;
+
 import io.home.awake.diasofthelper.R;
+import io.home.awake.diasofthelper.model.GetCalls;
 
 public class MainActivity extends AppCompatActivity{
     private TextView loginField;
+    public GetCalls callDiasoft = new GetCalls();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setDrawer();
         loginField = (TextView) findViewById(R.id.sampleText);
-
+        Button mTestButton = (Button) findViewById(R.id.testButton);
+        mTestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    callDiasoft.getPublicTimeline();
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        });
         Intent intent = getIntent();
 
         loginField.setText(getString(R.string.welcome) + " " + intent.getStringExtra("loginName"));
