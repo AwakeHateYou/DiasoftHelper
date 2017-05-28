@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:weightSum="1"
+                android:clipToPadding="false"
                 tools:context="io.home.awake.diasofthelper.activity.MainActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:minHeight="?attr/actionBarSize"
         android:paddingTop="@dimen/tool_bar_top_padding"
         android:transitionName="actionBar"/>
 
-    <ScrollView
-        android:id="@+id/main_form"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/toolbar">
+    <!--<ScrollView-->
+        <!--android:id="@+id/main_form"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_below="@+id/toolbar">-->
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,11 +35,6 @@
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin">
 
-            <Button
-                android:id="@+id/testButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Button"/>
 
             <TextView
                 android:id="@+id/sampleText"
@@ -46,6 +44,24 @@
                 android:text=""
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="22sp"/>
+
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/refresh"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/workRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:scrollbars="vertical"/>
+        </android.support.v4.widget.SwipeRefreshLayout>
         </LinearLayout>
-    </ScrollView>
+
+
+    <!--</ScrollView>-->
+
 </RelativeLayout>

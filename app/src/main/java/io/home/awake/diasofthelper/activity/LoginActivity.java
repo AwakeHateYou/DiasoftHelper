@@ -20,23 +20,21 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.view.KeyEvent;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
+
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnEditorAction;
 import io.home.awake.diasofthelper.R;
+import io.home.awake.diasofthelper.model.Login;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -52,43 +50,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     final static int MAIN_CODE = 1;
 
     /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "eterentev:123", "bar@example.com:world, 1:"
-    };
-    /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
 
     // UI references.
     private AutoCompleteTextView mLoginView;
-    private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        ButterKnife.bind(this);
         // Set up the login form.
 
         mLoginView = (AutoCompleteTextView) findViewById(R.id.login);
         populateAutoComplete();
 
-        mPasswordView = (EditText) findViewById(R.id.password);
-//        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-//                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-//                    attemptLogin(view);
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
 
         Button mSignInButton = (Button) findViewById(R.id.sign_in_button);
         mSignInButton.setOnClickListener(new OnClickListener() {
@@ -98,8 +76,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        mLoginFormView = findViewById(R.id.login_form);
     }
 
     private void populateAutoComplete() {
@@ -158,29 +136,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         // Reset errors.
         mLoginView.setError(null);
-        mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
         String login = mLoginView.getText().toString();
-        String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
+//        // Check for a valid password, if the user entered one.
+//        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+//            mPasswordView.setError(getString(R.string.error_invalid_password));
+//            focusView = mPasswordView;
+//            cancel = true;
+//        }
 
         // Check for a valid login.
         if (TextUtils.isEmpty(login)) {
             mLoginView.setError(getString(R.string.error_field_required));
-            focusView = mLoginView;
-            cancel = true;
-        } else if (!isLoginValid(login)) {
-            mLoginView.setError(getString(R.string.error_invalid_email));
             focusView = mLoginView;
             cancel = true;
         }
@@ -193,19 +165,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(login, password, view);
-            mAuthTask.execute((Void) null);
+            mAuthTask = new UserLoginTask(login, view);
+            mAuthTask.execute();
         }
-    }
-
-    private boolean isLoginValid(String login) {
-        //TODO: Replace this with your own logic
-        return login.length() > 1;
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 1;
     }
 
     /**
@@ -297,63 +259,52 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         int ADDRESS = 0;
         int IS_PRIMARY = 1;
     }
-    public void startMainActivity(View view){
+    public void startMainActivity(View view, String userName, Long userID){
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("loginName", mLoginView.getText().toString());
+        intent.putExtra("userName", userName);
+        intent.putExtra("userID", userID);
         startActivityForResult(intent, MAIN_CODE);
     }
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<Void, Void, Login> {
 
         private final String mLogin;
-        private final String mPassword;
         private View mView;
 
-        UserLoginTask(String login, String password, View view) {
-            mLogin = login;
-            mPassword = password;
-            mView = view;
+        UserLoginTask(String login, View view) {
+            this.mLogin = login;
+            this.mView = view;
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
+        protected Login doInBackground(Void... params) {
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
+                final String url = "http://awakehateyou.hldns.ru:8080/login?name=" + mLogin;
+                RestTemplate restTemplate = new RestTemplate();
+                restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+                Login login = restTemplate.getForObject(url, Login.class);
+                return login;
+            } catch (Exception e) {
+                Log.e("LoginActivity", e.getMessage(), e);
+                Login login =  null;
+                return login;
             }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mLogin)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // TODO: register the new account here.
-            return false;
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(Login login) {
             mAuthTask = null;
             showProgress(false);
 
-            if (success  == true) {
-                startMainActivity(mView);
+            if (login  != null) {
+                startMainActivity(mView, login.getName(), login.getUserID());
                 finish();
             } else {
-//                startMainActivity(mView);
-//                finish();
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                mLoginView.setError(getString(R.string.error_invalid_email));
+                mLoginView.requestFocus();
             }
         }
 
