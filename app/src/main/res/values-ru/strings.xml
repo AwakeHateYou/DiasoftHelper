@@ -20,7 +20,7 @@
     <string name="welcome">Добро пожаловать</string>
 
     <!--Drawer-->
-    <string name="drawer_item_settings">Настройки</string>
+    <string name="drawer_item_settings">Сменить пользователя</string>
     <string name="drawer_item_home">Домой</string>
     <string name="drawer_item_send_feedback">Отправить предложение</string>
 </resources>

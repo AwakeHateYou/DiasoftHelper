@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -55,15 +56,18 @@ public class WorkListAdapter extends RecyclerView.Adapter<WorkListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-//        Calendar c = Calendar.getInstance();
-//        c.setTime(new Date());
-//        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-        holder.mDateText.setText(mDataset.get(position).get("DateIn").toString());
-        holder.mWorkTimeText.setText(mDataset.get(position).get("TimeInWork").toString());
-        if(Double.parseDouble(mDataset.get(position).get("TimeInWork").toString()) >= 8){
-            holder.mCardView.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.jobDoneColor));
-        } else {
-            holder.mCardView.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.jobUndoneColor));
+        try {
+            SimpleDateFormat formatDate = new SimpleDateFormat("dd.MM.yyyy");
+            holder.mDateText.setText(mDataset.get(position).get("DateIn").toString());
+            holder.mWorkTimeText.setText("Списано: " + mDataset.get(position).get("TimeInWork").toString());
+            if (Double.parseDouble(mDataset.get(position).get("TimeInWork").toString()) >= 8) {
+                holder.mCardView.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.jobDoneColor));
+            } else {
+                holder.mCardView.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.jobUndoneColor));
+            }
+        }
+        catch (Exception e){
+
         }
 
 

@@ -46,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
 
     private Long userID;
 
+    final static int LOGIN_CODE = 2;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,10 +64,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 try {
+                    worksTask = new ActualWorksTask(userID);
                     worksTask.execute();
-//                    if (mSwipeRefreshLayout.isRefreshing()) {
-                        mSwipeRefreshLayout.setRefreshing(false);
-//                    }
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    mSwipeRefreshLayout.clearAnimation();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -89,7 +92,10 @@ public class MainActivity extends AppCompatActivity {
         workRecyclerView.setAdapter(adapter);
     }
 
-
+    public void startLoginActivity(){
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
     protected void setDrawer() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -108,7 +114,16 @@ public class MainActivity extends AppCompatActivity {
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        // do something with the clicked item :D
+                        switch (position){
+                            case 0:
+                                break;
+                            case 1:
+                                break;
+                            case 2:
+                                startLoginActivity();
+                                break;
+                            default:
+                        }
                         return true;
                     }
                 })
